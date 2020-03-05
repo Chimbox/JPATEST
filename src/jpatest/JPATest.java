@@ -7,9 +7,11 @@ package jpatest;
 
 import entity.Achievement;
 import entity.Videogame;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 
 /**
  *
@@ -26,7 +28,7 @@ public class JPATest {
                 = Persistence.createEntityManagerFactory("JPATestPU");
         EntityManager entityManager = 
                 managerFactory.createEntityManager();
-        
+        /*
         entityManager.getTransaction().begin();
         Videogame game = new Videogame();
         game.setName("Gears of War");
@@ -42,6 +44,16 @@ public class JPATest {
         
         entityManager.getTransaction().commit();
         System.out.println(entityManager.find(Videogame.class, 1).getName());
+        */
+        
+        TypedQuery<Videogame>   query = 
+                entityManager.createQuery(
+                        "SELECT v FROM Videogame v WHERE v.rating >= :rating", Videogame.class);
+        query.setParameter("rating", 4);
+        List<Videogame> list = query.getResultList();
+        for (Videogame videogame : list) {
+            System.out.println(videogame.getName());
+        }
     }
 
 }
