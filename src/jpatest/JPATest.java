@@ -5,6 +5,7 @@
  */
 package jpatest;
 
+import entity.Achievement;
 import entity.Videogame;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -28,17 +29,19 @@ public class JPATest {
         
         entityManager.getTransaction().begin();
         Videogame game = new Videogame();
-        game.setName("God of War");
-        game.setRating(8);
+        game.setName("Gears of War");
+        game.setRating(4);
+                
+        Achievement achievement1 = new Achievement();
+        achievement1.setName("Level 1 GOW");
         
+        game.addAchievement(achievement1);
+        
+        //achievement1.setVideogame(game);
         entityManager.persist(game);
         
         entityManager.getTransaction().commit();
-        
-        ;
         System.out.println(entityManager.find(Videogame.class, 1).getName());
-
-
     }
 
 }

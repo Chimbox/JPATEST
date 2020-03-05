@@ -6,63 +6,27 @@
 package entity;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashSet;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 /**
  *
  * @author lv1013
  */
 @Entity
-public class Videogame implements Serializable {
+public class Achievement implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
-    private String name;
-   
-    @Column(nullable = false)
-    private int rating;
-    
-    @OneToMany(mappedBy="videogame", cascade=CascadeType.PERSIST)
-    private Collection<Achievement> achievements;
-
-    public Videogame() {
-        this.achievements=new HashSet();
-    }
-
-    public void addAchievement(Achievement a){
-        a.setVideogame(this);
-        this.achievements.add(a);
-    }
-    
-    public Collection<Achievement> getAchievements() {
-        return achievements;
-    }
-
-    public void setAchievements(Collection<Achievement> achievements) {
-        this.achievements = achievements;
-    }
-
-
-    public int getRating() {
-        return rating;
-    }
-
-    public void setRating(int rating) {
-        this.rating = rating;
-    }
-    
     public Integer getId() {
         return id;
     }
@@ -71,12 +35,27 @@ public class Videogame implements Serializable {
         this.id = id;
     }
 
+    @Column(nullable=false)
+    private String name;
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @ManyToOne(cascade=CascadeType.PERSIST)
+    @JoinColumn(name = "videogame_id", nullable=false)
+    private Videogame videogame;
+
+    public Videogame getVideogame() {
+        return videogame;
+    }
+
+    public void setVideogame(Videogame videogame) {
+        this.videogame = videogame;
     }
 
     @Override
@@ -89,10 +68,10 @@ public class Videogame implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Videogame)) {
+        if (!(object instanceof Achievement)) {
             return false;
         }
-        Videogame other = (Videogame) object;
+        Achievement other = (Achievement) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -101,7 +80,7 @@ public class Videogame implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.Videogame[ id=" + id + " ]";
+        return "entity.Achievement[ id=" + id + " ]";
     }
-
+    
 }
