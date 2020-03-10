@@ -15,72 +15,54 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
  *
- * @author lv1013
+ * @author Invitado
  */
 @Entity
-@Table(name="videogame")
-public class Videogame implements Serializable {
+@Table (name="player")
+public class Player implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
+    
     @Column(nullable = false)
     private String name;
+    
+    @ManyToMany(cascade = {
+        CascadeType.PERSIST,
+        CascadeType.MERGE
+    })
+    @JoinTable(name = "player_videogame",
+        joinColumns = @JoinColumn(name = "player_id"),
+        inverseJoinColumns = @JoinColumn(name = "videogame_id")
+    )
+    private Collection<Videogame> videogames;
 
-    @Column(nullable = false)
-    private int rating;
-
-    @OneToMany(mappedBy = "videogame", cascade = CascadeType.PERSIST)
-    private Collection<Achievement> achievements;
-
-    @ManyToMany(mappedBy = "videogames")
-    private Collection<Player> players;
-
-    public Collection<Player> getPlayers() {
-        return players;
+    public Player() {
+        this.videogames=new HashSet();
+    }
+    
+    public Collection<Videogame> getVideogames() {
+        return videogames;
     }
 
-    public void setPlayers(Collection<Player> players) {
-        this.players = players;
+    public void setVideogames(Collection<Videogame> videogames) {
+        this.videogames = videogames;
     }
 
-    public Videogame() {
-        this.achievements = new HashSet();
-        this.players = new HashSet();
+    public String getName() {
+        return name;
     }
 
-    public void addAchievement(Achievement a) {
-        a.setVideogame(this);
-        this.achievements.add(a);
-    }
-
-    public Collection<Achievement> getAchievements() {
-        return achievements;
-    }
-
-    public void setAchievements(Collection<Achievement> achievements) {
-        this.achievements = achievements;
-    }
-
-    public void addPlayer(Player p) {
-        this.players.add(p);
-    }
-
-    public int getRating() {
-        return rating;
-    }
-
-    public void setRating(int rating) {
-        this.rating = rating;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Integer getId() {
@@ -90,13 +72,10 @@ public class Videogame implements Serializable {
     public void setId(Integer id) {
         this.id = id;
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    
+    public void addVideogame(Videogame v){
+        v.addPlayer(this);
+        this.videogames.add(v);
     }
 
     @Override
@@ -109,10 +88,10 @@ public class Videogame implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Videogame)) {
+        if (!(object instanceof Player)) {
             return false;
         }
-        Videogame other = (Videogame) object;
+        Player other = (Player) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -121,7 +100,7 @@ public class Videogame implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.Videogame[ id=" + id + " ]";
+        return "entity.Player[ id=" + id + " ]";
     }
-
+    
 }

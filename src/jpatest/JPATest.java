@@ -6,6 +6,7 @@
 package jpatest;
 
 import entity.Achievement;
+import entity.Player;
 import entity.Videogame;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -25,26 +26,36 @@ public class JPATest {
     public static void main(String[] args) {
 
         EntityManagerFactory managerFactory
-                = Persistence.createEntityManagerFactory("JPATestPU");
+                = Persistence.createEntityManagerFactory("JPATestPUPersonal");
         EntityManager entityManager = 
                 managerFactory.createEntityManager();
-        /*
+        
         entityManager.getTransaction().begin();
         Videogame game = new Videogame();
-        game.setName("Gears of War");
-        game.setRating(4);
+        game.setName("League Of Legends");
+        game.setRating(9);
                 
         Achievement achievement1 = new Achievement();
-        achievement1.setName("Level 1 GOW");
+        achievement1.setName("Level 30 reached");
         
         game.addAchievement(achievement1);
         
-        //achievement1.setVideogame(game);
+        Player player1=new Player();
+        player1.setName("Alfonso Felix");
+        
+        //game.addPlayer(player1);
+        
+        achievement1.setVideogame(game);
+        entityManager.persist(player1);
+        
+        player1.addVideogame(game);
+        
         entityManager.persist(game);
+        
         
         entityManager.getTransaction().commit();
         System.out.println(entityManager.find(Videogame.class, 1).getName());
-        */
+        
         
         TypedQuery<Videogame>   query = 
                 entityManager.createQuery(
