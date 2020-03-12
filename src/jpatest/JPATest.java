@@ -13,6 +13,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
+import persistence.RepositoryBase;
 
 /**
  *
@@ -65,6 +66,9 @@ public class JPATest {
         for (Videogame videogame : list) {
             System.out.println(videogame.getName());
         }
+        
+        RepositoryBase<Videogame> repository;
+        
     }
 
 }
